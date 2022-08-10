@@ -84,8 +84,9 @@ public class CarRecord implements Serializable {
     private String guid;
     /**
      * 上传时间 格式yyyy-MM-dd HH:mm:ss 不可空
+     * 有些设备推送时间带毫秒 yyyy-MM-dd HH:mm:ss.SSS
      */
-    private Date uploadTime;
+    private String uploadTime;
     /**
      * 门架id，可空
      */

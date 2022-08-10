@@ -11,6 +11,8 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -47,7 +49,20 @@ public abstract class XinLuWeiCarService implements DeviceConfigService<XinLuWei
         carInfo.setCarNo(carRecord.getPlateNumber());
         carInfo.setCarNoColor(XinLuWeiCarNoColorEnum.getByCode(carRecord.getPlateColor()));
         carInfo.setCarType(XinLuWeiCarTypeEnum.getByCode(carRecord.getCarModels()));
-        carInfo.setRecordTime(carRecord.getUploadTime());
+
+        String uploadTimeStr = carRecord.getUploadTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            carInfo.setRecordTime(sdf.parse(uploadTimeStr));
+        } catch (ParseException e) {
+            sdf.applyPattern("yyyy-MM-dd HH:mm:ss.SSS");
+            try {
+                carInfo.setRecordTime(sdf.parse(uploadTimeStr));
+            } catch (ParseException e1) {
+                log.warn("信路威卡口记录时间解析失败{} 使用服务器时间", uploadTimeStr);
+                carInfo.setRecordTime(new Date());
+            }
+        }
         carInfo.setHeadImageBase64(carRecord.getHeadImage());
         this.handle(config, carInfo);
     }

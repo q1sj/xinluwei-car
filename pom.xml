@@ -12,7 +12,7 @@
 
     <groupId>com.xsy</groupId>
     <artifactId>xinluwei-car</artifactId>
-    <version>1.0.3-releases</version>
+    <version>1.0.4-snapshot</version>
 
     <properties>
         <java.version>8</java.version>
@@ -86,11 +86,16 @@
         </plugins>
     </build>
     <distributionManagement>
-        <repository>
-            <!-- 需要和 maven中的 id一致-->
+        <!--<repository>
+            &lt;!&ndash; 需要和 maven中的 id一致&ndash;&gt;
             <id>nexus-releases</id>
             <name>nexus-releases</name>
             <url>http://192.168.2.6:8081/repository/maven-releases/</url>
+        </repository>-->
+        <repository>
+            <id>nexus-releases</id>
+            <name>nexus-snapshots</name>
+            <url>http://192.168.2.6:8081/repository/maven-snapshots/</url>
         </repository>
     </distributionManagement>
     <repositories>
