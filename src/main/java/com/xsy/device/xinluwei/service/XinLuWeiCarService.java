@@ -5,16 +5,17 @@ import com.xsy.device.config.DeviceException;
 import com.xsy.device.xinluwei.config.XinLuWeiCarDeviceConfig;
 import com.xsy.device.xinluwei.config.XinLuWeiCarDeviceConfigs;
 import com.xsy.device.xinluwei.entity.CarRecord;
-import com.xsy.device.xinluwei.enums.XinLuWeiCarTypeEnum;
 import com.xsy.device.xinluwei.enums.XinLuWeiCarNoColorEnum;
+import com.xsy.device.xinluwei.enums.XinLuWeiCarTypeEnum;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author Q1sj
@@ -22,6 +23,21 @@ import java.util.Objects;
  */
 @Slf4j
 public abstract class XinLuWeiCarService implements DeviceConfigService<XinLuWeiCarDeviceConfig> {
+    /**
+     * 过滤间隔时间内相同数据
+     */
+    @Value("${device-configs.xinluwei.car.filter.interval-minute:2}")
+    public int filterIntervalMinute;
+    /**
+     * 过滤数据时是否匹配车牌颜色
+     */
+    @Value("${device-configs.xinluwei.car.filter.match-car-no-color:true}")
+    public boolean filterMatchCarNoColor;
+    /**
+     * key deviceCode
+     */
+    private final Map<String, List<CarInfo>> map = new HashMap<>();
+
     /**
      * 将接口接收到数据转换为carInfo对象后调用此方法
      *
@@ -64,6 +80,9 @@ public abstract class XinLuWeiCarService implements DeviceConfigService<XinLuWei
             }
         }
         carInfo.setHeadImageBase64(carRecord.getHeadImage());
+        if (filterDuplicateData(deviceCode, carInfo)) {
+            return;
+        }
         this.handle(config, carInfo);
     }
 
@@ -83,6 +102,52 @@ public abstract class XinLuWeiCarService implements DeviceConfigService<XinLuWei
     public void logout(XinLuWeiCarDeviceConfig config) throws DeviceException {
         config.setOnline(false);
         XinLuWeiCarDeviceConfigs.staticSet.remove(config);
+    }
+
+    public int getFilterIntervalMinute() {
+        return filterIntervalMinute;
+    }
+
+    public boolean isFilterMatchCarNoColor() {
+        return filterMatchCarNoColor;
+    }
+
+    public void setFilterIntervalMinute(int filterIntervalMinute) {
+        this.filterIntervalMinute = filterIntervalMinute;
+    }
+
+    public void setFilterMatchCarNoColor(boolean filterMatchCarNoColor) {
+        this.filterMatchCarNoColor = filterMatchCarNoColor;
+    }
+
+    /**
+     * 过滤重复数据
+     *
+     * @param deviceCode
+     * @param carInfo
+     * @return
+     */
+    private boolean filterDuplicateData(String deviceCode, CarInfo carInfo) {
+        synchronized (XinLuWeiCarService.class) {
+            // 根据设备id获取数据缓存
+            List<CarInfo> cacheList = map.computeIfAbsent(deviceCode, key -> new ArrayList<>());
+            int filterIntervalMinute = getFilterIntervalMinute();
+            // 删除超时间隔时间的无效数据
+            cacheList.removeIf(c -> c.recordTime.before(DateUtils.addMinutes(carInfo.recordTime, -filterIntervalMinute)));
+            for (CarInfo item : cacheList) {
+                if (Objects.equals(item.carNo, carInfo.carNo)) {
+                    if (!isFilterMatchCarNoColor()) {
+                        log.warn("间隔{}分钟内存在相同车牌号 {} 不处理", filterIntervalMinute, item.carNo);
+                        return true;
+                    } else if (Objects.equals(item.carNoColor, carInfo.carNoColor)) {
+                        log.warn("间隔{}分钟内存在相同车牌号 {} 车牌颜色{} 不处理", filterIntervalMinute, item.carNo, item.carNoColor);
+                        return true;
+                    }
+                }
+            }
+            cacheList.add(carInfo);
+        }
+        return false;
     }
 
     @Data

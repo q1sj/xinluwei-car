@@ -2,7 +2,6 @@ package com.xsy.device.xinluwei.controller;
 
 import com.xsy.device.xinluwei.entity.CallbackRequest;
 import com.xsy.device.xinluwei.entity.Result;
-import com.xsy.device.xinluwei.service.SimpleXinLuWeiCarServiceImpl;
 import com.xsy.device.xinluwei.service.XinLuWeiCarService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 信路威设备接口
+ *
  * @author Q1sj
  * @date 2022.7.21 9:05
  */
@@ -20,10 +21,16 @@ public class XinLuWeiController {
 
     private final XinLuWeiCarService xinLuWeiCarService;
 
-    public XinLuWeiController(@Autowired(required = false) XinLuWeiCarService xinLuWeiCarService) {
-        this.xinLuWeiCarService = xinLuWeiCarService != null ? xinLuWeiCarService : new SimpleXinLuWeiCarServiceImpl();
+    public XinLuWeiController(@Autowired XinLuWeiCarService xinLuWeiCarService) {
+        this.xinLuWeiCarService = xinLuWeiCarService;
     }
 
+    /**
+     * 卡口数据上传
+     *
+     * @param car
+     * @return
+     */
     @RequestMapping("/xinluwei/callback")
     public Result callback(@RequestBody CallbackRequest car) {
         log.info("信路威卡口回调接口:{}", car);
