@@ -8,6 +8,7 @@ import com.xsy.device.xinluwei.entity.CarRecord;
 import com.xsy.device.xinluwei.enums.XinLuWeiCarNoColorEnum;
 import com.xsy.device.xinluwei.enums.XinLuWeiCarTypeEnum;
 import lombok.Data;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -171,6 +172,7 @@ public abstract class XinLuWeiCarService implements DeviceConfigService<XinLuWei
         /**
          * 车头大图 base64
          */
+        @ToString.Exclude
         private String headImageBase64;
     }
 }
