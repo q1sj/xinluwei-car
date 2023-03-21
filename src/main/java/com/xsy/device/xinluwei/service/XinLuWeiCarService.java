@@ -66,6 +66,7 @@ public abstract class XinLuWeiCarService implements DeviceConfigService<XinLuWei
         carInfo.setCarNo(carRecord.getPlateNumber());
         carInfo.setCarNoColor(XinLuWeiCarNoColorEnum.getByCode(carRecord.getPlateColor()));
         carInfo.setCarType(XinLuWeiCarTypeEnum.getByCode(carRecord.getCarModels()));
+        carInfo.setSpecialClass(carRecord.getSpecialClass());
 
         String uploadTimeStr = carRecord.getUploadTime();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -165,6 +166,10 @@ public abstract class XinLuWeiCarService implements DeviceConfigService<XinLuWei
          * 车辆类型
          */
         private XinLuWeiCarTypeEnum carType;
+        /**
+         * 危险品标志，例如：爆、腐等 没有null
+         */
+        private String specialClass;
         /**
          * 记录时间
          */
