@@ -1,6 +1,6 @@
 package com.xsy.device.xinluwei.config;
 
-import lombok.Data;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @author Q1sj
  * @date 2022.7.21 10:31
  */
-@Data
+@Setter
 @Component
 @ConfigurationProperties(prefix = "device-configs.xinluwei.car", ignoreInvalidFields = true)
 public class XinLuWeiCarDeviceConfigs {
@@ -29,6 +29,10 @@ public class XinLuWeiCarDeviceConfigs {
             set = new CopyOnWriteArraySet<>(set);
         }
         staticSet = set;
+    }
+
+    public Set<XinLuWeiCarDeviceConfig> getSet() {
+        return set;
     }
 
     public static XinLuWeiCarDeviceConfig getByDeviceCode(String deviceCode) {
