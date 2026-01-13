@@ -1,7 +1,9 @@
 package com.xsy.device.xinluwei.config;
 
 import com.xsy.device.xinluwei.service.SimpleXinLuWeiCarServiceImpl;
+import com.xsy.device.xinluwei.service.SimpleXinLuWeiCarV2ServiceImpl;
 import com.xsy.device.xinluwei.service.XinLuWeiCarService;
+import com.xsy.device.xinluwei.service.XinLuWeiCarV2Service;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,4 +21,12 @@ public class XinLuWeiCarServiceAutoConfiguration {
     public XinLuWeiCarService xinLuWeiCarService() {
         return new SimpleXinLuWeiCarServiceImpl();
     }
+
+    @Bean
+    @ConditionalOnMissingBean(XinLuWeiCarV2Service.class)
+    public XinLuWeiCarV2Service xinLuWeiCarV2Service() {
+        return new SimpleXinLuWeiCarV2ServiceImpl();
+    }
+
+
 }

@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class XinLuWeiCarDeviceConfig extends CarDeviceConfig {
+    private String version;
     /**
      * 设备编号
      * 在设备后台中查看
