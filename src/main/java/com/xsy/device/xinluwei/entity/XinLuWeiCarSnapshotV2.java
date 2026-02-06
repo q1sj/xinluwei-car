@@ -11,6 +11,10 @@ import lombok.Data;
 @Data
 public class XinLuWeiCarSnapshotV2 {
 	/**
+	 * 数据ID，唯一值
+	 */
+	private String guid;
+	/**
 	 * 设备 sn
 	 */
 	private String deviceSn;

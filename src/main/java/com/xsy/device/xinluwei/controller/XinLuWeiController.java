@@ -66,7 +66,7 @@ public class XinLuWeiController {
         try {
             xinLuWeiCarV2Service.handle(car);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error("信路威v2车辆抓拍数据上传接口执行失败:{}", e.getMessage(), e);
             return ResultV2.error("执行失败");
         }
         return ResultV2.ok();

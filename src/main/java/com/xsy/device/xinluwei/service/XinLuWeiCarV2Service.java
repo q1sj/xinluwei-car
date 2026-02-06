@@ -26,6 +26,7 @@ public abstract class XinLuWeiCarV2Service implements DeviceConfigService<XinLuW
 
 	public void handle(XinLuWeiCarSnapshotV2 car) {
 		CarInfo carInfo = new CarInfo();
+		carInfo.setGuid(car.getGuid());
 		carInfo.setCarNo(car.getVehiclePlate());
 		carInfo.setCarNoColor(XinLuWeiCarNoColorEnum.getByCode(Objects.toString(car.getPlateColor())));
 		carInfo.setCarType(XinLuWeiCarTypeEnum.getByCode(car.getVehicleType()));
@@ -73,6 +74,10 @@ public abstract class XinLuWeiCarV2Service implements DeviceConfigService<XinLuW
 
 	@Data
 	public static class CarInfo {
+		/**
+		 * 数据ID，唯一值
+		 */
+		private String guid;
 		/**
 		 * 车牌号
 		 */
