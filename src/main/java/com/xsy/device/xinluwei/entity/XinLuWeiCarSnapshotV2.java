@@ -86,4 +86,6 @@ public class XinLuWeiCarSnapshotV2 {
 	 * 绝对地址,如：http://ip:port/img2/tail.jpg
 	 */
 	private String tailImage;
+
+	private String carColor;
 }

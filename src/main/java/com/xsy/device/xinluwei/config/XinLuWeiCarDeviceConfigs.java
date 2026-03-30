@@ -19,16 +19,14 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @ConfigurationProperties(prefix = "device-configs.xinluwei.car", ignoreInvalidFields = true)
 public class XinLuWeiCarDeviceConfigs {
     private Set<XinLuWeiCarDeviceConfig> set;
-    public static Set<XinLuWeiCarDeviceConfig> staticSet;
+    public static Set<XinLuWeiCarDeviceConfig> staticSet = new CopyOnWriteArraySet<>();
 
     @PostConstruct
     public void init() {
-        if (set == null) {
-            set = new CopyOnWriteArraySet<>();
-        } else {
-            set = new CopyOnWriteArraySet<>(set);
+        if (set != null) {
+            staticSet.addAll(set);
         }
-        staticSet = set;
+        set = staticSet;
     }
 
     public Set<XinLuWeiCarDeviceConfig> getSet() {
