@@ -49,6 +49,7 @@ public abstract class XinLuWeiCarV2Service implements DeviceConfigService<XinLuW
 		carInfo.setHeadImageUrl(car.getHeadImage());
 		carInfo.setSideImageUrl(car.getSideImage());
 		carInfo.setTailImageUrl(car.getTailImage());
+		carInfo.setCarColor(car.getCarColor());
 		XinLuWeiCarDeviceConfig deviceConfig = XinLuWeiCarDeviceConfigs.getByDeviceCode(car.getDeviceSn());
 		handle(deviceConfig, carInfo);
 	}
@@ -114,5 +115,9 @@ public abstract class XinLuWeiCarV2Service implements DeviceConfigService<XinLuW
 		 * 车尾大图 url
 		 */
 		private String tailImageUrl;
+		/**
+		 * 车身颜色
+		 */
+		private String carColor;
 	}
 }
